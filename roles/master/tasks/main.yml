@@ -1,0 +1,39 @@
+---
+- name: open required ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+    - 6443/tcp
+    - 2379-2380/tcp
+    - 10250/tcp
+    - 10251/tcp
+    - 10252/tcp
+    - 10255/tcp
+
+- name: initialize
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 | tail -n2 | head -n1 | awk '{print $7;}'
+  register: kubeadm_hash
+
+- name: get token
+  shell: kubeadm token list | tail -n 1 | awk '{print $1;}'
+  register: kubeadm_token
+
+- name: configure bridge
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+
+- name: install pod network
+  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.0/Documentation/kube-flannel.yml
+
+- name: register config to var
+  command: cat /etc/kubernetes/admin.conf
+  register: configure
+
+- name: show config
+  debug:
+    msg: "{{ configure.stdout }}"

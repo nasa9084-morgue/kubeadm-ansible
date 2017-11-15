@@ -1,0 +1,7 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+kubernetes-master     {{ groups['master'][0] }}
+kubernetes-minion-1   {{ groups['minion'][0] }}
+kubernetes-minion-2   {{ groups['minion'][1] }}
+kubernetes-minion-3   {{ groups['minion'][2] }}

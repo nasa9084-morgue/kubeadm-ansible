@@ -1,0 +1,6 @@
+---
+- hosts: minion
+  become: yes
+  roles:
+    - common
+    - minion

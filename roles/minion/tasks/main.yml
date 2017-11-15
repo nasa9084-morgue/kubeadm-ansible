@@ -1,0 +1,14 @@
+---
+- name: open required ports
+  firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  with_items:
+    - 10250/tcp
+    - 10255/tcp
+    - 30000-32767/tcp
+
+- name: join node
+  command: kubeadm join --token {{ hostvars[groups['master'][0]]['kubeadm_token']['stdout'] }} {{ groups['master'][0] }}:6443 --discovery-token-ca-cert-hash {{ hostvars[groups['master'][0]]['kubeadm_hash']['stdout'] }}

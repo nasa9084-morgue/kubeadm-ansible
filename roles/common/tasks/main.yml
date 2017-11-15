@@ -1,0 +1,89 @@
+---
+- name: yum update
+  yum:
+    name: '*'
+    state: latest
+
+- name: disable selinux
+  selinux:
+    state: disabled
+
+- name: reboot
+  shell: "sleep 2 && reboot"
+  async: 1
+  poll: 0
+
+- name: wait rebooting
+  local_action: wait_for host={{ inventory_hostname }} port=22 delay=30
+  become: no
+
+- name: install firewalld
+  yum:
+    name: 'firewalld'
+    state: installed
+
+- name: start and enable firewalld
+  systemd:
+    name: firewalld.service
+    enabled: yes
+    state: started
+
+- name: install docker
+  yum:
+    name: docker
+    state: installed
+
+- name: start and enable docker
+  systemd:
+    name: docker.service
+    enabled: yes
+    state: started
+
+- name: add kubernetes yum repository
+  yum_repository:
+    name: Kubernetes
+    description: kubernetes yum repository
+    baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+    enabled: yes
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+- name: update yum
+  yum:
+    name: '*'
+    state: latest
+
+- name: install kubeadm, kubelet and kubectl
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: reset kubeadm
+  command: kubeadm reset
+
+- name: put /etc/hosts
+  template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+
+- name: put sysctl config
+  copy:
+    src: files/k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+
+- name: sysctl update
+  command: sysctl --system
+
+- name: turn off swap
+  command: swapoff -a
+
+- name: start and enable kubelet
+  systemd:
+    name: kubelet.service
+    enabled: yes
+    state: started
