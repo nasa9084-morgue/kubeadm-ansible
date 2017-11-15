@@ -14,5 +14,5 @@ ansible playbook to build kubernetes cluster
 
 ## usage
 
-0. edit `hosts` file in this directory (write a master IP and minion IPs)
-0. `$ ansible-playbook -i hosts -u root site.yml`
+1. edit `hosts` file in this directory (write a master IP and minion IPs)
+1. `$ ansible-playbook -i hosts -u root site.yml`
