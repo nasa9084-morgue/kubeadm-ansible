@@ -10,6 +10,7 @@ ansible playbook to build kubernetes cluster
 * 2 GB or more of RAM per machine (any less will leave little room for your apps)
 * 2 CPUs or more
 * Unique hostname, MAC address, and product_uuid for every node
+* ansible 2.4 or later
 
 ## usage
 
