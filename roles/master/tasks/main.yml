@@ -37,3 +37,8 @@
 - name: show config
   debug:
     msg: "{{ configure.stdout }}"
+
+- name: add kubeconfig to bashrc
+  lineinfile:
+    path: /root/.bashrc
+    line: "export KUBECONFIG=/etc/kubernetes/admin.conf"
