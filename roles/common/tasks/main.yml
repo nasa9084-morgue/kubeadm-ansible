@@ -17,16 +17,22 @@
   local_action: wait_for host={{ inventory_hostname }} port=22 delay=30
   become: no
 
-- name: install firewalld
-  yum:
-    name: 'firewalld'
-    state: installed
+#- name: install firewalld
+#  yum:
+#    name: 'firewalld'
+#    state: installed
+#
+#- name: start and enable firewalld
+#  systemd:
+#    name: firewalld.service
+#    enabled: yes
+#    state: started
 
-- name: start and enable firewalld
+- name: disable firewalld
   systemd:
     name: firewalld.service
-    enabled: yes
-    state: started
+    enabled: no
+    state: stopped
 
 - name: install docker
   yum:
