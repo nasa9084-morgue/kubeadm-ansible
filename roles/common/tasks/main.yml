@@ -54,6 +54,22 @@
     name: '*'
     state: latest
 
+- name: install ipvsadm
+  yum:
+    name: 'ipvsadm'
+    state: installed
+
+- name: preppare ipvsadm
+  file:
+    path: /etc/sysconfig/ipvsadm
+    state: touch
+
+- name: start ipvsadm
+  systemd:
+    name: ipvsadm.service
+    state: started
+    enabled: yes
+
 - name: install kubeadm, kubelet and kubectl
   yum:
     name: '{{ item }}'
