@@ -98,6 +98,13 @@
 - name: turn off swap
   command: swapoff -a
 
+- name: disable swap
+  lineinfile:
+    path: /etc/fstab
+    regexp: '^(.*swap.*)'
+    line: '#\1'
+    backrefs: yes
+
 - name: start and enable kubelet
   systemd:
     name: kubelet.service
