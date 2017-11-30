@@ -1,18 +1,4 @@
 ---
-#- name: open required ports
-#  firewalld:
-#    port: "{{ item }}"
-#    permanent: yes
-#    state: enabled
-#    immediate: yes
-#  with_items:
-#    - 6443/tcp
-#    - 2379-2380/tcp
-#    - 10250/tcp
-#    - 10251/tcp
-#    - 10252/tcp
-#    - 10255/tcp
-
 - name: initialize
   shell: kubeadm init --pod-network-cidr=10.244.0.0/16 | tail -n2 | head -n1 | awk '{print $7;}'
   register: kubeadm_hash

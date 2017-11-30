@@ -17,17 +17,6 @@
   local_action: wait_for host={{ inventory_hostname }} port=22 delay=30
   become: no
 
-#- name: install firewalld
-#  yum:
-#    name: 'firewalld'
-#    state: installed
-#
-#- name: start and enable firewalld
-#  systemd:
-#    name: firewalld.service
-#    enabled: yes
-#    state: started
-
 - name: disable firewalld
   systemd:
     name: firewalld.service
@@ -59,22 +48,6 @@
   yum:
     name: '*'
     state: latest
-
-- name: install ipvsadm
-  yum:
-    name: 'ipvsadm'
-    state: installed
-
-- name: preppare ipvsadm
-  file:
-    path: /etc/sysconfig/ipvsadm
-    state: touch
-
-- name: start ipvsadm
-  systemd:
-    name: ipvsadm.service
-    state: started
-    enabled: yes
 
 - name: install kubeadm, kubelet and kubectl
   yum:
