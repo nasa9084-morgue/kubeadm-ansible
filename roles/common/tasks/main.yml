@@ -111,10 +111,25 @@
       gpgcheck: true
       gpgkey: https://download.docker.com/linux/centos/gpg
 
+- name: remove old docker packages
+  yum:
+    state: removed
+    name: '{{ item }}'
+  with_items:
+    - docker
+    - docker-client
+    - docker-client-latest
+    - docker-common
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-logrotate
+    - docker-selinux
+    - docker-engine-selinux
+    - docker-engine
 
 - name: install docker
-  yum:
-    name: docker-ce-17.03.2.ce
+  command: yum install --setopt=obsoletes=0 -y docker-ce-17.03.2.ce
+  warn: no
 
 - name: start and enable docker
   systemd:
