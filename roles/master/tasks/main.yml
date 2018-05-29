@@ -1,4 +1,9 @@
 ---
+- name: configure storage driver
+  copy:
+    src: files/daemon.json
+    dst: /etc/docker/daemon.json
+
 - name: configure cgroup driver
   replace:
     path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
