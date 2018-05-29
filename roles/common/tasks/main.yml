@@ -22,17 +22,26 @@
     name: firewalld.service
     enabled: no
     state: stopped
+- name: install docker
+  yum:
+    name: '{{ item }}'
+  with_items:
+    - device-mapper-persistent-data
+    - lvm2
+
+- name: add docker yum repository
+  yum_repository:
+    include: https://download.docker.com/linux/centos/docker-ce.repo
 
 - name: install docker
   yum:
-    name: docker
-    state: installed
+    name: docker-ce-17.03.3.ce
 
 - name: start and enable docker
   systemd:
-    name: docker.service
-    enabled: yes
+    name: docker
     state: started
+    enabled: yes
 
 - name: add kubernetes yum repository
   yum_repository:
