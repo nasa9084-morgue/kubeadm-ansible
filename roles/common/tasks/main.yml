@@ -114,7 +114,7 @@
 
 - name: install docker
   yum:
-    name: docker-ce-17.03.3.ce
+    name: docker-ce-17.03.2.ce
 
 - name: start and enable docker
   systemd:
