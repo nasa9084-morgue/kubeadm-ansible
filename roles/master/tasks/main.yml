@@ -44,10 +44,6 @@
 - name: install pod network
   command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.0/Documentation/kube-flannel.yml
 
-- name: master isolation
-  command: kubectl taint nodes --all node-role.kubbernetes.io/master-
-  when: master_isolation
-
 - name: register config to var
   command: cat /etc/kubernetes/admin.conf
   register: configure
