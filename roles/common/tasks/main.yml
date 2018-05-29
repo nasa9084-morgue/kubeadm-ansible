@@ -131,6 +131,11 @@
   command: yum install --setopt=obsoletes=0 -y docker-ce-17.03.2.ce
   warn: no
 
+- name: configure storage driver
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+
 - name: start and enable docker
   systemd:
     name: docker
