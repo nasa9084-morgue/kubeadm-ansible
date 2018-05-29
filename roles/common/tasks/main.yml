@@ -67,9 +67,6 @@
     - kubeadm
     - kubectl
 
-- name: reset kubeadm
-  command: kubeadm reset
-
 - name: put /etc/hosts
   template:
     src: templates/hosts.j2
