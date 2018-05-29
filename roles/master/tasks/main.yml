@@ -11,9 +11,20 @@
     daemon-reload: yes
     state: restarted
 
-- name: initialize
+- name: initialize for calico
+  shell: kubeadm init --pod-network-cidr=192.168.0.0/16 | tail -n2 | head -n1 | awk '{print $7;}'
+  register: kubeadm_hash
+  when: network_plugin == 'calico'
+
+- name: initialize for canal
   shell: kubeadm init --pod-network-cidr=10.244.0.0/16 | tail -n2 | head -n1 | awk '{print $7;}'
   register: kubeadm_hash
+  when: network_plugin == 'canal'
+
+- name: initialize for flannel
+  shell: kubeadm init --pod-network-cidr=10.244.0.0/16 | tail -n2 | head -n1 | awk '{print $7;}'
+  register: kubeadm_hash
+  when: network_plugin == 'flannel'
 
 - name: get token
   shell: kubeadm token list | tail -n 1 | awk '{print $1;}'
@@ -27,6 +38,10 @@
 
 - name: install pod network
   command: kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.0/Documentation/kube-flannel.yml
+
+- name: master isolation
+  command: kubectl taint nodes --all node-role.kubbernetes.io/master-
+  when: master_isolation
 
 - name: register config to var
   command: cat /etc/kubernetes/admin.conf

@@ -1,0 +1,6 @@
+---
+# You can choose network plugin
+# choice from: calico, canal, flannel
+network_plugin: flannel
+
+master_isolation: true
